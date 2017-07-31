@@ -5,6 +5,7 @@ from django.test import TestCase
 
 from jarbas.core.management.commands.suspicions import Command
 from jarbas.core.models import Reimbursement
+from jarbas.core.tests import shared_tests
 
 
 class TestCommand(TestCase):
@@ -32,7 +33,8 @@ class TestSerializer(TestCommand):
             'hypothesis_3': 'True',
             'probability': '0.38'
         }
-        self.assertEqual(self.command.serialize(input), expected)
+        shared_tests.test_serializer(self, self.command, expected, input)
+
 
     def test_serializer_without_probability(self):
         expected = {
@@ -74,10 +76,8 @@ class TestCustomMethods(TestCommand):
     @patch('jarbas.core.management.commands.suspicions.Command.schedule_update')
     @patch('jarbas.core.management.commands.suspicions.Command.update')
     def test_main(self, update, schedule_update, suspicions):
-        suspicions.return_value = (range(21), range(21, 43))
-        self.command.main()
-        update.assert_has_calls([call()] * 2)
-        schedule_update.assert_has_calls(call(i) for i in range(42))
+        shared_tests.test_main(self, self.command, update, schedule_update, suspicions)
+
 
     @patch.object(Reimbursement.objects, 'get')
     def test_schedule_update_existing_record(self, get):
