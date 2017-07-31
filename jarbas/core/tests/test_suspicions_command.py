@@ -90,9 +90,9 @@ class TestCustomMethods(TestCommand):
         }
         self.command.queue = []
         self.command.schedule_update(content)
-        get.assert_called_once_with(document_id=42)
-        self.assertEqual(0.618, reimbursement.probability)
-        self.assertEqual({'answer': 42}, reimbursement.suspicions)
+        get.assert_called_once_with(document_id=content['document_id'])
+        self.assertEqual(content['probability'], reimbursement.probability)
+        self.assertEqual(content['suspicions'], reimbursement.suspicions)
         self.assertEqual([reimbursement], self.command.queue)
 
     @patch.object(Reimbursement.objects, 'get')
