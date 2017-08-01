@@ -63,6 +63,7 @@ class TestCustomMethods(TestCommand):
         self.command.schedule_update(content)
         get.assert_called_once_with(document_id=42)
         self.assertEqual(content['receipt_text'], reimbursement.receipt_text)
+        self.assertEqual([reimbursement], self.command.queue)
 
     @patch.object(Reimbursement.objects, 'get')
     def test_schedule_update_non_existing_record(self, get):
