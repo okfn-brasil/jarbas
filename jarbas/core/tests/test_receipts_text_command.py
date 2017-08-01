@@ -5,6 +5,7 @@ from django.test import TestCase
 
 from jarbas.core.management.commands.receipts_text import Command
 from jarbas.core.models import Reimbursement
+from jarbas.core.tests import shared_tests
 
 
 class TestCommand(TestCase):
@@ -65,12 +66,8 @@ class TestCustomMethods(TestCommand):
 
     @patch.object(Reimbursement.objects, 'get')
     def test_schedule_update_non_existing_record(self, get):
-        get.side_effect = Reimbursement.DoesNotExist
         content = {'document_id': 42}
-        self.command.queue = []
-        self.command.schedule_update(content)
-        get.assert_called_once_with(document_id=42)
-        self.assertEqual([], self.command.queue)
+        shared_tests.test_schedule_update_non_existing_record(self, get, content, self.command)
 
     @patch('jarbas.core.management.commands.receipts_text.bulk_update')
     @patch('jarbas.core.management.commands.receipts_text.print')

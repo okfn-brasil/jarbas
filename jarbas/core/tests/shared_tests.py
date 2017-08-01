@@ -2,6 +2,8 @@ from unittest.mock import call
 
 from django.test import TestCase
 
+from jarbas.core.models import Reimbursement
+
 # Serializer methods: TestSerializer
 
 
@@ -18,3 +20,10 @@ def test_main(TestCase, obj, update, schedule_update, costum_method):
     obj.main()
     update.assert_has_calls([call()] * 2)
     schedule_update.assert_has_calls(call(i) for i in range(42))
+
+def test_schedule_update_non_existing_record(TestCase, get, content, obj):
+    get.side_effect = Reimbursement.DoesNotExist
+    obj.queue = []
+    obj.schedule_update(content)
+    get.assert_called_once_with(document_id=42)
+    TestCase.assertEqual([], obj.queue)
