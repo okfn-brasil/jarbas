@@ -12,7 +12,7 @@ def test_serializer(TestCase, obj, expected, input):
     TestCase.assertEqual(serialized, expected)
 
 
-# Cotum methods:  TestCustomMethods
+# Custom methods:  TestCustomMethods
 
 
 def test_main(TestCase, obj, update, schedule_update, costum_method):
