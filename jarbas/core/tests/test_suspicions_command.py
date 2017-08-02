@@ -1,7 +1,7 @@
 from io import StringIO
 from unittest.mock import Mock, call, patch
 
-from django.test import TestCase
+from jarbas.core.tests import TestCase
 
 from jarbas.core.management.commands.suspicions import Command
 from jarbas.core.models import Reimbursement
@@ -33,7 +33,7 @@ class TestSerializer(TestCommand):
             'hypothesis_3': 'True',
             'probability': '0.38'
         }
-        shared_tests.test_serializer(self, self.command, expected, input)
+        self.serializer(self.command, expected, input)
 
 
     def test_serializer_without_probability(self):

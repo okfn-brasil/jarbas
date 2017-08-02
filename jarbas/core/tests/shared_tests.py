@@ -4,13 +4,6 @@ from django.test import TestCase
 
 from jarbas.core.models import Reimbursement
 
-# Serializer methods: TestSerializer
-
-
-def test_serializer(TestCase, obj, expected, input):
-    serialized = obj.serialize(input)
-    TestCase.assertEqual(serialized, expected)
-
 
 # Custom methods:  TestCustomMethods
 

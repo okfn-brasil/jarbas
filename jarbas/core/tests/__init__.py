@@ -2,6 +2,7 @@ from datetime import date
 from random import randrange
 
 from django.utils import timezone
+from django.test import TestCase as DjangoTestCase
 
 from jarbas.core.models import Tweet
 
@@ -91,3 +92,10 @@ def random_tweet_status():
     min_range = 9223372036854775807  # max big integer should be the minimum
     max_range = 10 ** status.max_digits  # field limit
     return randrange(min_range, max_range)
+
+
+class TestCase(DjangoTestCase):
+
+    def serializer(self, obj, expected, input):
+        serialized = obj.serialize(input)
+        self.assertEqual(serialized, expected)
