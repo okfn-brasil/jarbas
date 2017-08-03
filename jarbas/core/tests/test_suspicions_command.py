@@ -5,7 +5,6 @@ from jarbas.core.tests import TestCase
 
 from jarbas.core.management.commands.suspicions import Command
 from jarbas.core.models import Reimbursement
-from jarbas.core.tests import shared_tests
 
 
 class TestCommand(TestCase):
@@ -76,7 +75,7 @@ class TestCustomMethods(TestCommand):
     @patch('jarbas.core.management.commands.suspicions.Command.schedule_update')
     @patch('jarbas.core.management.commands.suspicions.Command.update')
     def test_main(self, update, schedule_update, suspicions):
-        shared_tests.test_main(self, self.command, update, schedule_update, suspicions)
+        self.main(self.command, update, schedule_update, suspicions)
 
 
     @patch.object(Reimbursement.objects, 'get')
@@ -98,7 +97,7 @@ class TestCustomMethods(TestCommand):
     @patch.object(Reimbursement.objects, 'get')
     def test_schedule_update_non_existing_record(self, get):
         content = {'document_id': 42}
-        shared_tests.test_schedule_update_non_existing_record(self, get, content, self.command)
+        self.schedule_update_non_existing_record(get, content, self.command)
 
     @patch('jarbas.core.management.commands.suspicions.bulk_update')
     @patch('jarbas.core.management.commands.suspicions.print')

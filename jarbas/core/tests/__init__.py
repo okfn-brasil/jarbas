@@ -1,10 +1,12 @@
 from datetime import date
 from random import randrange
 
+from unittest.mock import call
+
 from django.utils import timezone
 from django.test import TestCase as DjangoTestCase
 
-from jarbas.core.models import Tweet
+from jarbas.core.models import Reimbursement, Tweet
 
 
 class TestCase(DjangoTestCase):
@@ -12,6 +14,19 @@ class TestCase(DjangoTestCase):
     def serializer(self, obj, expected, input):
         serialized = obj.serialize(input)
         self.assertEqual(serialized, expected)
+
+    def main(self, obj, update, schedule_update, costum_method):
+        costum_method.return_value = (range(21), range(21, 43))
+        obj.main()
+        update.assert_has_calls([call()] * 2)
+        schedule_update.assert_has_calls(call(i) for i in range(42))
+
+    def schedule_update_non_existing_record(self, get, content, obj):
+        get.side_effect = Reimbursement.DoesNotExist
+        obj.queue = []
+        obj.schedule_update(content)
+        get.assert_called_once_with(document_id=42)
+        self.assertEqual([], obj.queue)
 
 
 suspicions = {
