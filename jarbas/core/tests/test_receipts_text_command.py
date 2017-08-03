@@ -69,13 +69,8 @@ class TestCustomMethods(TestCommand):
     @patch('jarbas.core.management.commands.receipts_text.bulk_update')
     @patch('jarbas.core.management.commands.receipts_text.print')
     def test_update(self, print_, bulk_update):
-        self.command.count = 40
-        self.command.queue = list(range(2))
-        self.command.update()
         fields = ['receipt_text',]
-        bulk_update.assert_called_with([0, 1], update_fields=fields)
-        print_.assert_called_with('42 reimbursements updated.', end='\r')
-        self.assertEqual(42, self.command.count)
+        self.update(self.command, fields, print_, bulk_update)
 
 
 class TestConventionMethods(TestCommand):

@@ -28,6 +28,14 @@ class TestCase(DjangoTestCase):
         get.assert_called_once_with(document_id=42)
         self.assertEqual([], command.queue)
 
+    def update(self, command, fields, print_, bulk_update):
+        command.count = 40
+        command.queue = list(range(2))
+        command.update()
+        bulk_update.assert_called_with([0, 1], update_fields=fields)
+        print_.assert_called_with('42 reimbursements updated.', end='\r')
+        self.assertEqual(42, command.count)
+
 
 suspicions = {
     'over_monthly_subquota': {'is_suspect': True, 'probability': 1.0}
