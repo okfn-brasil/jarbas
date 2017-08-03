@@ -21,7 +21,7 @@ class TestCase(DjangoTestCase):
         update.assert_has_calls([call()] * 2)
         schedule_update.assert_has_calls(call(i) for i in range(42))
 
-    def schedule_update_non_existing_record(self, get, content, command):
+    def schedule_update_non_existing_record(self, command, content, get):
         get.side_effect = Reimbursement.DoesNotExist
         command.queue = []
         command.schedule_update(content)

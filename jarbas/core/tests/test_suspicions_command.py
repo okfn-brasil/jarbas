@@ -97,7 +97,7 @@ class TestCustomMethods(TestCommand):
     @patch.object(Reimbursement.objects, 'get')
     def test_schedule_update_non_existing_record(self, get):
         content = {'document_id': 42}
-        self.schedule_update_non_existing_record(get, content, self.command)
+        self.schedule_update_non_existing_record(self.command, content, get)
 
     @patch('jarbas.core.management.commands.suspicions.bulk_update')
     @patch('jarbas.core.management.commands.suspicions.print')
