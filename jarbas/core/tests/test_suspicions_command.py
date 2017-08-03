@@ -32,7 +32,7 @@ class TestSerializer(TestCommand):
             'hypothesis_3': 'True',
             'probability': '0.38'
         }
-        self.serializer(self.command, expected, input)
+        self.serializer(self.command, input, expected)
 
 
     def test_serializer_without_probability(self):
@@ -51,7 +51,7 @@ class TestSerializer(TestCommand):
             'hypothesis_2': 'False',
             'hypothesis_3': 'True'
         }
-        self.assertEqual(self.command.serialize(input), expected)
+        self.serializer(self.command, input, expected)
 
     def test_serializer_without_suspicions(self):
         expected = {

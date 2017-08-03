@@ -11,7 +11,7 @@ from jarbas.core.models import Reimbursement, Tweet
 
 class TestCase(DjangoTestCase):
 
-    def serializer(self, obj, expected, input):
+    def serializer(self, obj, input, expected):
         serialized = obj.serialize(input)
         self.assertEqual(serialized, expected)
 
