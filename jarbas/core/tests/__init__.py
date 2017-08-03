@@ -36,6 +36,13 @@ class TestCase(DjangoTestCase):
         print_.assert_called_with('42 reimbursements updated.', end='\r')
         self.assertEqual(42, command.count)
 
+    def handler_with_options(self, command, print_, exits, main, costum_command):
+        command.handle(dataset=self.file_name, batch_size=42)
+        main.assert_called_once_with()
+        print_.assert_called_once_with('0 reimbursements updated.')
+        self.assertEqual(command.path, self.file_name)
+        self.assertEqual(command.batch_size, 42)
+
 
 suspicions = {
     'over_monthly_subquota': {'is_suspect': True, 'probability': 1.0}

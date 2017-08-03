@@ -11,6 +11,7 @@ class TestCommand(TestCase):
 
     def setUp(self):
         self.command = Command()
+        self.file_name = 'suspicions.xz'
 
 
 class TestSerializer(TestCommand):
@@ -128,11 +129,7 @@ class TestConventionMethods(TestCommand):
     @patch('jarbas.core.management.commands.suspicions.os.path.exists')
     @patch('jarbas.core.management.commands.suspicions.print')
     def test_handler_with_options(self, print_, exists, main, suspicions):
-        self.command.handle(dataset='suspicions.xz', batch_size=42)
-        main.assert_called_once_with()
-        print_.assert_called_once_with('0 reimbursements updated.')
-        self.assertEqual(self.command.path, 'suspicions.xz')
-        self.assertEqual(self.command.batch_size, 42)
+        self.handler_with_options(self.command, print_, exists, main, suspicions)
 
     @patch('jarbas.core.management.commands.suspicions.Command.suspicions')
     @patch('jarbas.core.management.commands.suspicions.Command.main')
