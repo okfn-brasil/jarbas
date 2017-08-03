@@ -25,7 +25,7 @@ class TestSerializer(TestCommand):
             'document_id': '42',
             'text': 'lorem ipsum'
         }
-        self.assertEqual(self.command.serialize(input), expected)
+        self.serializer(self.command, input, expected)
 
     def test_serializer_without_text(self):
         expected = {
@@ -36,7 +36,7 @@ class TestSerializer(TestCommand):
         input = {
             'document_id': '42',
         }
-        self.assertEqual(self.command.serialize(input), expected)
+        self.serializer(self.command, input, expected)
 
 
 class TestCustomMethods(TestCommand):

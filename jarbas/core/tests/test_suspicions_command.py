@@ -66,7 +66,7 @@ class TestSerializer(TestCommand):
             'hypothesis_2': 'False',
             'hypothesis_3': 'False'
         }
-        self.assertEqual(self.command.serialize(input), expected)
+        self.serializer(self.command, input, expected)
 
 
 class TestCustomMethods(TestCommand):
