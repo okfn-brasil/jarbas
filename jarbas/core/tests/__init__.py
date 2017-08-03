@@ -11,22 +11,22 @@ from jarbas.core.models import Reimbursement, Tweet
 
 class TestCase(DjangoTestCase):
 
-    def serializer(self, obj, input, expected):
-        serialized = obj.serialize(input)
+    def serializer(self, command, input, expected):
+        serialized = command.serialize(input)
         self.assertEqual(serialized, expected)
 
-    def main(self, obj, update, schedule_update, costum_method):
+    def main(self, command, update, schedule_update, costum_method):
         costum_method.return_value = (range(21), range(21, 43))
-        obj.main()
+        command.main()
         update.assert_has_calls([call()] * 2)
         schedule_update.assert_has_calls(call(i) for i in range(42))
 
-    def schedule_update_non_existing_record(self, get, content, obj):
+    def schedule_update_non_existing_record(self, get, content, command):
         get.side_effect = Reimbursement.DoesNotExist
-        obj.queue = []
-        obj.schedule_update(content)
+        command.queue = []
+        command.schedule_update(content)
         get.assert_called_once_with(document_id=42)
-        self.assertEqual([], obj.queue)
+        self.assertEqual([], command.queue)
 
 
 suspicions = {
