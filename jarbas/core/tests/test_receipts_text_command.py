@@ -1,11 +1,10 @@
 from io import StringIO
 from unittest.mock import Mock, call, patch
 
-from django.test import TestCase
+from jarbas.core.tests import TestCase
 
 from jarbas.core.management.commands.receipts_text import Command
 from jarbas.core.models import Reimbursement
-from jarbas.core.tests import shared_tests
 
 
 class TestCommand(TestCase):
@@ -68,7 +67,7 @@ class TestCustomMethods(TestCommand):
     @patch.object(Reimbursement.objects, 'get')
     def test_schedule_update_non_existing_record(self, get):
         content = {'document_id': 42}
-        shared_tests.test_schedule_update_non_existing_record(self, get, content, self.command)
+        self.schedule_update_non_existing_record(get, content, self.command)
 
     @patch('jarbas.core.management.commands.receipts_text.bulk_update')
     @patch('jarbas.core.management.commands.receipts_text.print')
