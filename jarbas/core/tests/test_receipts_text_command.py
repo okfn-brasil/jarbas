@@ -45,10 +45,7 @@ class TestCustomMethods(TestCommand):
     @patch('jarbas.core.management.commands.receipts_text.Command.schedule_update')
     @patch('jarbas.core.management.commands.receipts_text.Command.update')
     def test_main(self, update, schedule_update, receipts):
-        receipts.return_value = (range(21), range(21, 43))
-        self.command.main()
-        update.assert_has_calls([call()] * 2)
-        schedule_update.assert_has_calls(call(i) for i in range(42))
+        self.main(self.command, update, schedule_update, receipts)
 
     @patch.object(Reimbursement.objects, 'get')
     def test_schedule_update_existing_record(self, get):
