@@ -88,11 +88,7 @@ class TestConventionMethods(TestCommand):
     @patch('jarbas.core.management.commands.receipts_text.os.path.exists')
     @patch('jarbas.core.management.commands.receipts_text.print')
     def test_handler_without_options(self, print_, exists, main, receipts):
-        self.command.handle(dataset='receipts-texts.xz', batch_size=4096)
-        main.assert_called_once_with()
-        print_.assert_called_once_with('0 reimbursements updated.')
-        self.assertEqual(self.command.path, 'receipts-texts.xz')
-        self.assertEqual(self.command.batch_size, 4096)
+        self.handler_without_options(self.command, print_, exists, main, receipts)
 
     @patch('jarbas.core.management.commands.receipts_text.Command.receipts')
     @patch('jarbas.core.management.commands.receipts_text.Command.main')
