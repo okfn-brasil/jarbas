@@ -94,10 +94,7 @@ class TestConventionMethods(TestCommand):
     @patch('jarbas.core.management.commands.receipts_text.Command.main')
     @patch('jarbas.core.management.commands.receipts_text.os.path.exists')
     def test_handler_with_non_existing_file(self, exists, update, receipts):
-        exists.return_value = False
-        with self.assertRaises(FileNotFoundError):
-            self.command.handle(dataset='receipts-text.xz', batch_size=4096)
-        update.assert_not_called()
+        self.handler_with_non_existing_file(self.command, exists, update, receipts)
 
 
 class TestFileLoader(TestCommand):

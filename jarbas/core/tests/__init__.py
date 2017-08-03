@@ -50,6 +50,12 @@ class TestCase(DjangoTestCase):
         self.assertEqual(command.path, self.file_name)
         self.assertEqual(command.batch_size, 4096)
 
+    def handler_with_non_existing_file(self, command, exists, update, costum_command):
+        exists.return_value = False
+        with self.assertRaises(FileNotFoundError):
+            command.handle(dataset='suspicions.xz', batch_size=4096)
+        update.assert_not_called()
+
 
 suspicions = {
     'over_monthly_subquota': {'is_suspect': True, 'probability': 1.0}
