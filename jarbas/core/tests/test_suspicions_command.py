@@ -152,14 +152,8 @@ class TestFileLoader(TestCommand):
     @patch('jarbas.core.management.commands.suspicions.csv.DictReader')
     @patch('jarbas.core.management.commands.suspicions.Command.serialize')
     def test_suspicions(self, serialize, rows, lzma, print_):
-        serialize.return_value = '.'
-        lzma.return_value = StringIO()
-        rows.return_value = range(42)
-        self.command.batch_size = 10
-        self.command.path = 'suspicions.xz'
-        expected = [['.'] * 10, ['.'] * 10, ['.'] * 10, ['.'] * 10, ['.'] * 2]
-        self.assertEqual(expected, list(self.command.suspicions()))
-        self.assertEqual(42, serialize.call_count)
+        self.new_command(self.command, self.command.suspicions(),
+                         serialize, rows, lzma, print_)
 
 
 class TestAddArguments(TestCase):

@@ -104,19 +104,13 @@ class TestFileLoader(TestCommand):
     @patch('jarbas.core.management.commands.receipts_text.csv.DictReader')
     @patch('jarbas.core.management.commands.receipts_text.Command.serialize')
     def test_receipts(self, serialize, rows, lzma, print_):
-        serialize.return_value = '.'
-        lzma.return_value = StringIO()
-        rows.return_value = range(42)
-        self.command.batch_size = 10
-        self.command.path = 'receipts-text.xz'
-        expected = [['.'] * 10, ['.'] * 10, ['.'] * 10, ['.'] * 10, ['.'] * 2]
-        self.assertEqual(expected, list(self.command.receipts()))
-        self.assertEqual(42, serialize.call_count)
+        self.new_command(self.command, self.command.receipts(),
+                         serialize, rows, lzma, print_)
 
 
-class TestAddArguments(TestCase):
+class TestAddArguments(TestCommand):
 
     def test_add_arguments(self):
         mock = Mock()
-        Command().add_arguments(mock)
+        self.command.add_arguments(mock)
         self.assertEqual(2, mock.add_argument.call_count)

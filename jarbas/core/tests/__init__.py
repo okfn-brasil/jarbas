@@ -1,3 +1,4 @@
+from io import StringIO
 from datetime import date
 from random import randrange
 
@@ -55,6 +56,16 @@ class TestCase(DjangoTestCase):
         with self.assertRaises(FileNotFoundError):
             command.handle(dataset='suspicions.xz', batch_size=4096)
         update.assert_not_called()
+
+    def new_command(self, command, costum_command, serialize, rows, lzma, print_):
+        serialize.return_value = '.'
+        lzma.return_value = StringIO()
+        rows.return_value = range(42)
+        command.batch_size = 10
+        command.path = self.file_name
+        expected = [['.'] * 10, ['.'] * 10, ['.'] * 10, ['.'] * 10, ['.'] * 2]
+        self.assertEqual(expected, list(costum_command))
+        self.assertEqual(42, serialize.call_count)
 
 
 suspicions = {
