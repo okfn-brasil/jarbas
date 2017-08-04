@@ -1,5 +1,4 @@
-from io import StringIO
-from unittest.mock import Mock, call, patch
+from unittest.mock import patch
 
 from jarbas.core.tests import TestCase
 
@@ -111,6 +110,5 @@ class TestFileLoader(TestCommand):
 class TestAddArguments(TestCommand):
 
     def test_add_arguments(self):
-        mock = Mock()
-        self.command.add_arguments(mock)
-        self.assertEqual(2, mock.add_argument.call_count)
+        self.add_arguments(self.command)
+        self.add_arguments(self.command)

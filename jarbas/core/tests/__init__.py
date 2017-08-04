@@ -2,7 +2,7 @@ from io import StringIO
 from datetime import date
 from random import randrange
 
-from unittest.mock import call
+from unittest.mock import Mock, call
 
 from django.utils import timezone
 from django.test import TestCase as DjangoTestCase
@@ -66,6 +66,11 @@ class TestCase(DjangoTestCase):
         expected = [['.'] * 10, ['.'] * 10, ['.'] * 10, ['.'] * 10, ['.'] * 2]
         self.assertEqual(expected, list(costum_command))
         self.assertEqual(42, serialize.call_count)
+
+    def add_arguments(self, command):
+        mock = Mock()
+        command.add_arguments(mock)
+        self.assertEqual(2, mock.add_argument.call_count)
 
 
 suspicions = {

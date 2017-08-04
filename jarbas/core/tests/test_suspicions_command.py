@@ -1,5 +1,4 @@
-from io import StringIO
-from unittest.mock import Mock, call, patch
+from unittest.mock import patch
 
 from jarbas.core.tests import TestCase
 
@@ -156,9 +155,7 @@ class TestFileLoader(TestCommand):
                          serialize, rows, lzma, print_)
 
 
-class TestAddArguments(TestCase):
+class TestAddArguments(TestCommand):
 
     def test_add_arguments(self):
-        mock = Mock()
-        Command().add_arguments(mock)
-        self.assertEqual(2, mock.add_argument.call_count)
+        self.add_arguments(self.command)
