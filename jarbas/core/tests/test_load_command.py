@@ -1,11 +1,9 @@
 from datetime import date
 from unittest.mock import Mock, patch
 
-from jarbas.core.tests import TestCase
-
 from jarbas.core.management.commands import LoadCommand
 from jarbas.core.models import Activity
-from jarbas.core.tests import sample_activity_data
+from jarbas.core.tests import TestCase, sample_activity_data
 
 
 class TestCommand(TestCase):

@@ -2,11 +2,9 @@ from datetime import date
 from io import StringIO
 from unittest.mock import patch
 
-from jarbas.core.tests import TestCase
-
 from jarbas.core.management.commands.companies import Command
 from jarbas.core.models import Activity, Company
-from jarbas.core.tests import sample_company_data
+from jarbas.core.tests import TestCase, sample_company_data
 
 
 class TestCommand(TestCase):

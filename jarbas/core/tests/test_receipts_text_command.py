@@ -1,9 +1,8 @@
 from unittest.mock import patch
 
-from jarbas.core.tests import TestCase
-
 from jarbas.core.management.commands.receipts_text import Command
 from jarbas.core.models import Reimbursement
+from jarbas.core.tests import TestCase
 
 
 class TestCommand(TestCase):

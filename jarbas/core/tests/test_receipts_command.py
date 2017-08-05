@@ -1,10 +1,10 @@
 from unittest.mock import Mock, call, patch
 
-from jarbas.core.tests import TestCase
 from django.db.models import QuerySet
 from requests.exceptions import ConnectionError
 
 from jarbas.core.management.commands.receipts import Command
+from jarbas.core.tests import TestCase
 
 
 class TestCommand(TestCase):

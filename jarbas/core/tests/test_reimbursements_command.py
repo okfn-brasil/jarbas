@@ -2,10 +2,9 @@ from datetime import date
 from io import StringIO
 from unittest.mock import MagicMock, call, patch
 
-from jarbas.core.tests import TestCase
-
 from jarbas.core.management.commands.reimbursements import Command
 from jarbas.core.models import Reimbursement
+from jarbas.core.tests import TestCase
 
 
 class TestCommand(TestCase):
