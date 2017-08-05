@@ -2,7 +2,7 @@ from datetime import date
 from io import StringIO
 from unittest.mock import MagicMock, call, patch
 
-from django.test import TestCase
+from jarbas.core.tests import TestCase
 
 from jarbas.core.management.commands.reimbursements import Command
 from jarbas.core.models import Reimbursement
@@ -85,8 +85,7 @@ class TestSerializer(TestCommand):
             'reimbursement_value_total': 'NaN',
             'year': '1970'
         }
-        self.maxDiff = 2 ** 10
-        self.assertEqual(self.command.serialize(input), expected)
+        self.serializer(self.command, input, expected)
 
 
 class TestCreate(TestCommand):
