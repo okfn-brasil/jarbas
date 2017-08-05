@@ -50,10 +50,7 @@ class TestCommandHandler(TestCommand):
         self.assertEqual(0, self.command.count)
 
     def test_add_arguments(self):
-        parser = Mock()
-        command = Command()
-        command.add_arguments(parser)
-        self.assertEqual(2, parser.add_argument.call_count)
+        self.add_arguments(self.command)
 
 
 class TestCommandMethods(TestCommand):
