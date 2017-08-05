@@ -83,6 +83,17 @@ class TestCreate(TestCommand):
 class TestConventionMethods(TestCommand):
 
     @patch('jarbas.core.management.commands.companies.print')
+    @patch('jarbas.core.management.commands.companies.Command.drop_all')
+    @patch('jarbas.core.management.commands.companies.Command.save_companies')
+    @patch('jarbas.core.management.commands.companies.Command.print_count')
+    def test_handler_with_options(self, print_count, save_companies, drop_all, print_):
+        print_count.return_value = 0
+        self.command.handle(dataset='companies.xz', drop=True)
+        print_.assert_called_with('Starting with 0 companies')
+        self.assertEqual(2, drop_all.call_count)
+        self.assertEqual(1, save_companies.call_count)
+
+    @patch('jarbas.core.management.commands.companies.print')
     @patch('jarbas.core.management.commands.companies.LoadCommand.drop_all')
     @patch('jarbas.core.management.commands.companies.Command.save_companies')
     @patch('jarbas.core.management.commands.companies.Command.print_count')
@@ -94,14 +105,3 @@ class TestConventionMethods(TestCommand):
         self.assertEqual(1, print_count.call_count)
         self.assertEqual('companies.xz', self.command.path)
         drop_all.assert_not_called()
-
-    @patch('jarbas.core.management.commands.companies.print')
-    @patch('jarbas.core.management.commands.companies.Command.drop_all')
-    @patch('jarbas.core.management.commands.companies.Command.save_companies')
-    @patch('jarbas.core.management.commands.companies.Command.print_count')
-    def test_handler_with_options(self, print_count, save_companies, drop_all, print_):
-        print_count.return_value = 0
-        self.command.handle(dataset='companies.xz', drop=True)
-        print_.assert_called_with('Starting with 0 companies')
-        self.assertEqual(2, drop_all.call_count)
-        self.assertEqual(1, save_companies.call_count)
