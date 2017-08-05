@@ -111,4 +111,3 @@ class TestAddArguments(TestCommand):
 
     def test_add_arguments(self):
         self.add_arguments(self.command)
-        self.add_arguments(self.command)
