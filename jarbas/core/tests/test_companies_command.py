@@ -2,7 +2,7 @@ from datetime import date
 from io import StringIO
 from unittest.mock import patch
 
-from django.test import TestCase
+from jarbas.core.tests import TestCase
 
 from jarbas.core.management.commands.companies import Command
 from jarbas.core.models import Activity, Company
@@ -23,7 +23,7 @@ class TestSerializer(TestCommand):
         self.assertEqual(self.command.to_email('jane@example.com'), expected)
 
     def test_serializer(self):
-        company = {
+        input = {
             'email': 'ahoy',
             'opening': '31/12/1969',
             'situation_date': '31/12/1969',
@@ -39,7 +39,7 @@ class TestSerializer(TestCommand):
             'latitude': 3.1415,
             'longitude': -42.0
         }
-        self.assertEqual(self.command.serialize(company), expected)
+        self.serializer(self.command, input, expected)
 
 
 class TestCreate(TestCommand):
