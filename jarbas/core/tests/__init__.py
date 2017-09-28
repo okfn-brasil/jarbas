@@ -16,8 +16,8 @@ class TestCase(DjangoTestCase):
         serialized = command.serialize(input)
         self.assertEqual(serialized, expected)
 
-    def main(self, command, update, schedule_update, costum_method):
-        costum_method.return_value = (range(21), range(21, 43))
+    def main(self, command, update, schedule_update, custom_method):
+        custom_method.return_value = (range(21), range(21, 43))
         command.main()
         update.assert_has_calls([call()] * 2)
         schedule_update.assert_has_calls(call(i) for i in range(42))
@@ -37,34 +37,34 @@ class TestCase(DjangoTestCase):
         print_.assert_called_with('42 reimbursements updated.', end='\r')
         self.assertEqual(42, command.count)
 
-    def handler_with_options(self, command, print_, exits, main, costum_command):
+    def handler_with_options(self, command, print_, exits, main, custom_command):
         command.handle(dataset=self.file_name, batch_size=42)
         main.assert_called_once_with()
         print_.assert_called_once_with('0 reimbursements updated.')
         self.assertEqual(command.path, self.file_name)
         self.assertEqual(command.batch_size, 42)
 
-    def handler_without_options(self, command, print_, exits, main, costum_command):
+    def handler_without_options(self, command, print_, exits, main, custom_command):
         command.handle(dataset=self.file_name, batch_size=4096)
         main.assert_called_once_with()
         print_.assert_called_once_with('0 reimbursements updated.')
         self.assertEqual(command.path, self.file_name)
         self.assertEqual(command.batch_size, 4096)
 
-    def handler_with_non_existing_file(self, command, exists, update, costum_command):
+    def handler_with_non_existing_file(self, command, exists, update, custom_command):
         exists.return_value = False
         with self.assertRaises(FileNotFoundError):
             command.handle(dataset='suspicions.xz', batch_size=4096)
         update.assert_not_called()
 
-    def new_command(self, command, costum_command, serialize, rows, lzma, print_):
+    def new_command(self, command, custom_command, serialize, rows, lzma, print_):
         serialize.return_value = '.'
         lzma.return_value = StringIO()
         rows.return_value = range(42)
         command.batch_size = 10
         command.path = self.file_name
         expected = [['.'] * 10, ['.'] * 10, ['.'] * 10, ['.'] * 10, ['.'] * 2]
-        self.assertEqual(expected, list(costum_command))
+        self.assertEqual(expected, list(custom_command))
         self.assertEqual(42, serialize.call_count)
 
     def add_arguments(self, command):
