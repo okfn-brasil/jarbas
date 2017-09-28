@@ -58,7 +58,22 @@ class SuspiciousWidget(Widget):
         return '<div class="readonly">{}</div>'.format(suspicions)
 
 
-class SuspiciousListFilter(SimpleListFilter):
+class JarbasListFilter(SimpleListFilter):
+
+    options = tuple()
+
+    def lookups(self, request, model_admin):
+        return self.options
+
+    def queryset(self, request, queryset):
+        if not self.value():
+            return queryset
+
+        kwarg = {self.parameter_name: self.value()}
+        return queryset.filter(**kwarg)
+
+
+class SuspiciousListFilter(JarbasListFilter):
 
     title = 'reembolso suspeito'
     parameter_name = 'is_suspicions'
@@ -67,11 +82,39 @@ class SuspiciousListFilter(SimpleListFilter):
         ('no', 'Não'),
     )
 
-    def lookups(self, request, model_admin):
-        return self.options
-
     def queryset(self, request, queryset):
         return queryset.suspicions() if self.value() == 'yes' else queryset
+
+
+class MonthListFilter(JarbasListFilter):
+
+    title = 'mês'
+    parameter_name = 'month'
+    options = (
+        (1, 'Janeiro'),
+        (2, 'Fevereiro'),
+        (3, 'Março'),
+        (4, 'Abril'),
+        (5, 'Maio'),
+        (6, 'Junho'),
+        (7, 'Julho'),
+        (8, 'Agosto'),
+        (9, 'Setembro'),
+        (10, 'Outubro'),
+        (11, 'Novembro'),
+        (12, 'Dezembro')
+    )
+
+
+class DocumentTypeListFilter(JarbasListFilter):
+
+    title = 'tipo do documento fiscal'
+    parameter_name = 'document_type'
+    options = (
+        (0, 'Nota fiscal'),
+        (1, 'Recibo simples'),
+        (2, 'Despesa no exterior')
+    )
 
 
 class Subquotas:
@@ -194,6 +237,7 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
         'short_document_id',
         'jarbas',
         'rosies_tweet',
+        'receipt_link',
         'congressperson_name',
         'year',
         'subquota_translated',
@@ -219,6 +263,8 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
         # 'available_in_latest_dataset',
         'state',
         'year',
+        MonthListFilter,
+        DocumentTypeListFilter,
         SubquotaListFilter,
     )
 
@@ -259,6 +305,14 @@ class ReimbursementModelAdmin(SimpleHistoryAdmin):
 
     rosies_tweet.short_description = ''
     rosies_tweet.allow_tags = True
+
+    def receipt_link(self, obj):
+        if not obj.receipt_url:
+            return ''
+        return '<a target="_blank" href="{}">📃</a>'.format(obj.receipt_url)
+
+    receipt_link.short_description = ''
+    receipt_link.allow_tags = True
 
     def suspicious(self, obj):
         return obj.suspicions is not None
