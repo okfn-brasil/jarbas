@@ -37,17 +37,28 @@ services:
         condition: on-failure
 
   django:
-    env_file:
-      - .env.prod
-    networks:
-      - backend
+    image: datasciencebr/jarbas-backend
     environment:
+      DATABASE_URL: "postgres://jarbas:mysecretpassword@postgres/jarbas"
+      ALLOWED_HOSTS: "localhost,127.0.0.1"
+      AMAZON_S3_BUCKET: "serenata-de-amor-data"
+      AMAZON_S3_REGION: "s3-sa-east-1"
+      AMAZON_S3_CEAPTRANSLATION_DATE: "2016-08-08"
+      CELERY_BROKER_URL: "amqp://guest:guest@queue/"
       DEBUG: "False"
       ALLOWED_HOSTS: ${VIRTUAL_HOST_WEB}
+    env_file:
+      - .env.prod
     depends_on:
+      - elm
+      - tasks
+      - postgres
       - memcached
     volumes:
       - assets:/code/staticfiles
+      - "./contrib/data:/mnt/data"
+    networks:
+      - backend
     command: ["gunicorn", "jarbas.wsgi:application", "--reload", "--bind", "0.0.0.0:8000"]
     deploy:
       replicas: 4
@@ -55,18 +66,27 @@ services:
         condition: on-failure
 
   tasks:
+    image: datasciencebr/jarbas-backend
+    environment:
+      DATABASE_URL: "postgres://jarbas:mysecretpassword@postgres/jarbas"
+      CELERY_BROKER_URL: "amqp://guest:guest@queue/"
+      DEBUG: "False"
     env_file:
       - .env
+    depends_on:
+      - postgres
+      - queue
+    entrypoint: ["/bin/sh", "-c"]
+    command: ["celery worker --app jarbas"]
     networks:
       - backend
-    environment:
-      - DEBUG=False
     deploy:
       replicas: 1
       restart_policy:
         condition: on-failure
 
   queue:
+    image: rabbitmq:3.6.11-alpine
     networks:
       - backend
     deploy:
@@ -78,6 +98,7 @@ services:
           - node.role == manager
 
   elm:
+    image: datasciencebr/jarbas-frontend
     command: ["npm", "run", "assets"]
     volumes:
       - assets:/code/jarbas/layers/static
@@ -85,6 +106,13 @@ services:
       replicas: 1
 
   postgres:
+    image: postgres:9.6.5-alpine
+    environment:
+      POSTGRES_PASSWORD: "mysecretpassword"
+      POSTGRES_USER: "jarbas"
+      POSTGRES_DB: "jarbas"
+    volumes:
+      - ./db:/var/lib/postgresql
     networks:
       - backend
     command: ["-c", "random_page_cost=1"]
