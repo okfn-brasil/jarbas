@@ -3,7 +3,6 @@ services:
 
   proxy:
     image: jwilder/nginx-proxy
-    container_name: proxy
     ports:
       - "443:443"
       - "80:80"
@@ -47,8 +46,6 @@ services:
       ALLOWED_HOSTS: ${VIRTUAL_HOST_WEB}
     depends_on:
       - memcached
-    expose:
-      - "8000"
     volumes:
       - assets:/code/staticfiles
     command: ["gunicorn", "jarbas.wsgi:application", "--reload", "--bind", "0.0.0.0:8000"]
@@ -88,8 +85,6 @@ services:
       replicas: 1
 
   postgres:
-    expose:
-      - "5432"
     networks:
       - backend
     command: ["-c", "random_page_cost=1"]
