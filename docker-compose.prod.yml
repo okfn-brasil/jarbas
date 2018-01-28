@@ -76,6 +76,9 @@ services:
       replicas: 1
       restart_policy:
         condition: on-failure
+      placement:
+        constraints:
+          - node.role == manager
 
   elm:
     command: ["npm", "run", "assets"]
@@ -94,6 +97,9 @@ services:
       replicas: 1
       restart_policy:
         condition: on-failure
+      placement:
+        constraints:
+          - node.role == manager
 
   memcached:
     image: memcached:1.5.1-alpine
