@@ -12,6 +12,7 @@ services:
     labels:
       - "com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy=true"
     deploy:
+      replicas: 4
       restart_policy:
         condition: on-failure
     volumes:
@@ -31,6 +32,10 @@ services:
       - proxy-public:/usr/share/nginx/html
     environment:
       NGINX_PROXY_CONTAINER: proxy
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
 
   django:
     env_file:
@@ -47,6 +52,10 @@ services:
     volumes:
       - assets:/code/staticfiles
     command: ["gunicorn", "jarbas.wsgi:application", "--reload", "--bind", "0.0.0.0:8000"]
+    deploy:
+      replicas: 4
+      restart_policy:
+        condition: on-failure
 
   tasks:
     env_file:
@@ -55,15 +64,25 @@ services:
       - backend
     environment:
       - DEBUG=False
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
 
   queue:
     networks:
       - backend
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
 
   elm:
     command: ["npm", "run", "assets"]
     volumes:
       - assets:/code/jarbas/layers/static
+    deploy:
+      replicas: 1
 
   postgres:
     expose:
@@ -71,11 +90,19 @@ services:
     networks:
       - backend
     command: ["-c", "random_page_cost=1"]
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
 
   memcached:
     image: memcached:1.5.1-alpine
     networks:
       - backend
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
 
   nginx:
     image: datasciencebr/jarbas-server
@@ -91,6 +118,10 @@ services:
       LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL:-op.serenatadeamor@gmail.com}
       HTTPS_METHOD: ${HTTPS_METHOD:-redirect}
       VIRTUAL_PROTO: http
+    deploy:
+      replicas: 4
+      restart_policy:
+        condition: on-failure
 
 volumes:
   assets:
